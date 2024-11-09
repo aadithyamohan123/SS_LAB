@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main() 
+{
+    char add[6], length[10], input[10], bitmask[12], relocbit;
+    int start, len, i, address, opcode, addr, actualadd;
+    FILE *fp1, *fp2;
+
+    printf("Enter the actual starting address: ");
+    scanf("%d", &start);
+
+    fp1 = fopen("relocinput.txt", "r");
+    fp2 = fopen("relocoutput.txt", "w");
+
+    if (fp1 == NULL || fp2 == NULL) 
+    {
+        printf("Error opening files.\n");
+        return 1; 
+    }
+
+    fprintf(fp2,"%s\t%s\t%s\n","raddr","Opcd","aaddr");
+
+    fscanf(fp1, "%s", input);
+
+    while (strcmp(input, "E") != 0) 
+    {
+        if (strcmp(input, "H") == 0) 
+        {
+            fscanf(fp1, "%s", add);
+            fscanf(fp1, "%s", length);
+            fscanf(fp1, "%s", input); 
+        }
+
+        if (strcmp(input, "T") == 0)
+        {
+            fscanf(fp1, "%d", &address);
+            address += start;
+            
+            fscanf(fp1, "%s", bitmask);
+            len = strlen(bitmask); 
+
+            for (i = 0; i < len; i++) 
+            {
+                fscanf(fp1, "%d", &opcode);  
+                fscanf(fp1, "%d", &addr);   
+
+                relocbit = bitmask[i]; 
+                if (relocbit == '0') 
+                {
+                    actualadd = addr;
+                } 
+                else 
+                {
+                    actualadd = addr + start;
+                }
+
+                fprintf(fp2, "%d\t%d\t%d\n", address, opcode, actualadd);
+                address += 3;
+            }
+            fscanf(fp1, "%s", input); 
+        }
+
+    }
+
+    fclose(fp1);
+    fclose(fp2);
+
+    printf("FINISHED");
+
+    return 0; 
+}
