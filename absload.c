@@ -27,7 +27,7 @@ int main()
         fscanf(f1, "%s", input);
     }
 
-    while (strcmp(input, "H") != 0)
+    while (strcmp(input, "E") != 0)
     {
         if (strcmp(input, "T") == 0)
         {
